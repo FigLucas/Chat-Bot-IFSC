@@ -70,8 +70,3 @@ docker-compose up --build
 ## Variáveis de ambiente principais
 
 Veja o arquivo `.env.example` para exemplos e instruções.
-
-
----
-
-> Desenvolvido por IFSC-USP
