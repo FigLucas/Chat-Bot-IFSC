@@ -71,9 +71,6 @@ docker-compose up --build
 
 Veja o arquivo `.env.example` para exemplos e instruções.
 
-## Licença
-
-Este projeto é apenas para fins acadêmicos e de demonstração.
 
 ---
 
