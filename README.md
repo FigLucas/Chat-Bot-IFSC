@@ -10,11 +10,9 @@ Sistema de chat inteligente com IA para responder dúvidas sobre o IFSC-USP, uti
 - [🛠 Tecnologias](#-tecnologias)
 - [📋 Pré-requisitos](#-pré-requisitos)
 - [🚀 Instalação e Configuração](#-instalação-e-configuração)
-- [⚡ Deploy](#-deploy)
 - [💬 Uso](#-uso)
 - [📡 API Endpoints](#-api-endpoints)
 - [📁 Estrutura do Projeto](#-estrutura-do-projeto)
-- [🤝 Contribuição](#-contribuição)
 
 ---
 
