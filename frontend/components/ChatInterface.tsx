@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { LogOut, User, Send } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import { sendMessage } from '@/lib/api'
 
 interface Message {
   id: string
@@ -16,6 +17,7 @@ export default function ChatInterface() {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [conversationId, setConversationId] = useState<string | null>(null)
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,41 +54,48 @@ export default function ChatInterface() {
       timestamp: new Date()
     }
 
-    setMessages(prev => [...prev, userMessage])
+    // Garante que já tenha um conversationId (sessão)
+    if (!conversationId) {
+      const newId = crypto.randomUUID()
+      setConversationId(newId)
+    }
+
+    const newMessages = [...messages, userMessage]
+    setMessages(newMessages)
     setMessage('')
     setIsLoading(true)
 
     try {
-      const token = localStorage.getItem('access_token')
-      const response = await fetch('http://localhost:8000/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ content: userMessage.content, role: 'user' })
-      })
+      // Monta histórico (últimas N mensagens)
+      const history = newMessages.slice(-20).map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.content
+      }))
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          handleLogout()
-          return
-        }
-        throw new Error(`Erro ${response.status}: ${await response.text()}`)
-      }
+      console.log('📤 ChatInterface -> history a enviar (len=', history.length, '):', history)
 
-      const data = await response.json()
+      const resp = await sendMessage(
+        userMessage.content,
+        conversationId || undefined,
+        history // <-- FUNDAMENTAL
+      )
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.content || 'Resposta não encontrada',
+        content: resp.content,
         role: 'assistant',
         timestamp: new Date()
       }
       setMessages(prev => [...prev, assistantMessage])
-    } catch (error) {
+
+      // Se o backend retornar um session_id novo, atualiza
+      if (resp.session_id && resp.session_id !== conversationId) {
+        setConversationId(resp.session_id)
+      }
+    } catch (err) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
+        content: `Erro: ${err instanceof Error ? err.message : 'Erro desconhecido'}`,
         role: 'assistant',
         timestamp: new Date()
       }

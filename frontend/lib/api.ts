@@ -68,56 +68,38 @@ function getAuthHeaders(): Record<string, string> {
   return {}
 }
 
-export async function sendMessage(message: string | { content: string }, conversationId?: string): Promise<ChatResponse> {
-  const plain = typeof message === 'string' ? message : message?.content
-  const trimmed = (plain ?? '').trim()
-  if (!trimmed) throw new Error('Mensagem vazia')
+export async function sendMessage(message: string | { content: string }, conversationId?: string, history?: { role: string, content: string }[]) {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+  const token = typeof window !== 'undefined' ? (localStorage.getItem('access_token') || '') : ''
+
+  const body: any = {
+    content: typeof message === 'string' ? message : message.content
+  }
+  if (conversationId) body.conversation_id = conversationId
+  if (history && history.length) body.history = history
+
+  // DEBUG: log do payload
+  console.log('📤 sendMessage -> POST', `${API_BASE}/chat`, 'body=', body)
+
   try {
-    console.log('🚀 Enviando mensagem para:', `${API_BASE_URL}/chat`)
-    const authHeaders = getAuthHeaders()
-
-    const requestBody: any = { message: trimmed }
-    if (conversationId) requestBody.conversation_id = conversationId
-    console.log('🧾 Payload /chat:', requestBody)
-
-    const response = await fetch(`${API_BASE_URL}/chat`, {
+    const response = await fetch(`${API_BASE}/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...authHeaders
+        'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(body)
     })
 
-    console.log('📡 Response status:', response.status)
-
+    // Lança erro para status não OK
     if (!response.ok) {
-      if (response.status === 401) {
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('user_data')
-        window.location.href = '/login'
-        throw new Error('Sessão expirada')
-      }
-      const errorData = await response.json().catch(() => ({}))
-      console.error('❌ Erro /chat:', errorData)
-      throw new Error(errorData.detail || 'Erro ao enviar mensagem')
+      const text = await response.text()
+      throw new Error(`HTTP ${response.status}: ${text}`)
     }
 
     const data = await response.json()
-    console.log('🧾 Resposta /chat (raw):', data)
-    const answer = data.response ?? data.content
-    if (!answer) {
-      throw new Error('Resposta não encontrada no payload')
-    }
-    return {
-      content: answer,
-      role: 'assistant',
-      confidence: undefined,
-      sources: [],
-      processing_time: undefined,
-      response_type: undefined,
-      user_info: undefined
-    }
+    console.log('📡 /chat status:', response.status)
+    return data
   } catch (error) {
     console.error('❌ Exceção sendMessage:', error)
     throw error

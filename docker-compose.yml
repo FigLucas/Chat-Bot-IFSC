@@ -5,14 +5,16 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - ./.env
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - JWT_ALGORITHM=${JWT_ALGORITHM}
       - JWT_ACCESS_TOKEN_EXPIRE_MINUTES=${JWT_ACCESS_TOKEN_EXPIRE_MINUTES}
-      - CORS_ORIGINS=${CORS_ORIGINS}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - MARITACA_API_KEY=${MARITACA_API_KEY}
+      - REDIS_URL=redis://redis:6379/0   # Adicione esta linha
     volumes:
       - ./backend:/app
       - ./pdfs:/app/pdfs
@@ -22,6 +24,8 @@ services:
       - "8000:8000"
     networks:
       - chatbot_net
+    depends_on:
+      - redis
 
   frontend:
     build:
@@ -33,6 +37,14 @@ services:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
     ports:
       - "3000:3000"
+    networks:
+      - chatbot_net
+
+  redis:
+    image: redis:7.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
     networks:
       - chatbot_net
 

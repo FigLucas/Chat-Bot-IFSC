@@ -57,3 +57,5 @@ frontend/.next/
 frontend/out/
 frontend/build/
 frontend/pnpm-debug.log*
+
+docker-compose.prod.yml
