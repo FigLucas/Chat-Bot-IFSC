@@ -1,72 +1,212 @@
-# Assistente Virtual IFSC-USP
+```markdown
+// filepath: README.md
+# 🤖 Assistente Virtual IFSC-USP
 
-Assistente virtual para dúvidas sobre o IFSC-USP, utilizando IA, RAG (Retrieval-Augmented Generation) e integração com modelos OpenAI e Maritaca. O sistema possui frontend em Next.js/React e backend em FastAPI, com autenticação JWT e suporte a Docker.
+Sistema de chat inteligente com IA para responder dúvidas sobre o IFSC-USP, utilizando RAG (Retrieval-Augmented Generation) e integração com modelos OpenAI e Maritaca.
 
-## Estrutura do Projeto
+## 📋 Índice
+
+- [Características](#-características)
+- [Arquitetura](#-arquitetura)
+- [Tecnologias](#-tecnologias)
+- [Pré-requisitos](#-pré-requisitos)
+- [Instalação e Configuração](#-instalação-e-configuração)
+- [Deploy](#-deploy)
+- [Uso](#-uso)
+- [API Endpoints](#-api-endpoints)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Contribuição](#-contribuição)
+
+## ✨ Características
+
+- 🔐 **Autenticação JWT** com middleware de segurança
+- 🧠 **Chat inteligente** usando RAG com busca semântica
+- 📄 **Processamento de PDFs** com indexação automática no FAISS
+- 🔍 **Reranking de respostas** para melhor relevância
+- 💾 **Cache Redis** para histórico de conversas com TTL
+- 🌐 **Interface moderna** responsiva com Next.js e TailwindCSS
+- 🐳 **Containerização** completa com Docker
+- 📊 **Logs estruturados** para monitoramento
+
+## 🏗️ Arquitetura
 
 ```
-.
-├── backend/         # Backend FastAPI (Python)
-├── frontend/        # Frontend Next.js (React/TypeScript)
-├── pdfs/            # PDFs indexados pelo sistema
-├── vectorstore/     # Base vetorial FAISS
-├── cache/           # Cache de respostas
-├── docker-compose.yml
-├── .env
-├── .gitignore
-└── ...
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Backend       │    │   Vector DB     │
+│   (Next.js)     │◄──►│   (FastAPI)     │◄──►│   (FAISS)       │
+│   Port: 3000    │    │   Port: 8000    │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                       
+                                ▼                      
+                       ┌─────────────────┐              
+                       │     Redis       │              
+                       │ (Cache/Session) |              
+                       │   Port: 6379    │              
+                       └─────────────────┘              
+                                                       
+   
 ```
 
-## Pré-requisitos
+## 🛠️ Tecnologias
 
-- Docker e Docker Compose instalados
-- Chaves de API válidas para OpenAI e Maritaca (definidas em `.env`)
+### Frontend
+- **Next.js 14** - Framework React com App Router
+- **TypeScript** - Tipagem estática
+- **TailwindCSS** - Framework CSS utilitário
+- **React Hooks** - Gerenciamento de estado
+- **Fetch API** - Comunicação com backend
 
-## Configuração
+### Backend
+- **FastAPI** - Framework web async Python
+- **LangChain** - Framework para aplicações com LLM
+- **FAISS** - Vector database para busca semântica
+- **Redis** - Cache e sessões
+- **PyPDF2** - Processamento de PDFs
+- **JWT** - Autenticação stateless
+- **Uvicorn** - Servidor ASGI
 
-1. **Clone o repositório:**
-   ```sh
-   git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-   cd SEU_REPOSITORIO
-   ```
+### IA e ML
+- **OpenAI GPT** - Modelo principal de linguagem
+- **Maritaca AI** - Modelo alternativo brasileiro
+- **OpenAI Embeddings** - Geração de vetores semânticos
+- **Sentence Transformers** - Reranking de documentos
 
-2. **Configure as variáveis de ambiente:**
-   - Edite o arquivo `.env` na raiz com suas chaves e configurações.
+### Infraestrutura
+- **Docker & Docker Compose** - Containerização
+- **Redis** - Cache distribuído
 
-3. **(Opcional) Adicione PDFs em `pdfs/` para indexação.**
+## 📋 Pré-requisitos
 
-## Como rodar com Docker
+- **Docker** 20.10+ e **Docker Compose** 2.0+
+- **Node.js** 18+ (para desenvolvimento local)
+- **Python** 3.11+ (para desenvolvimento local)
+- **Chaves de API**:
+  - OpenAI API Key
+  - Maritaca API Key (opcional)
 
-```sh
+## 🚀 Instalação e Configuração
+
+### 1. Clone o repositório
+```bash
+git clone https://github.com/SEU_USUARIO/chat-bot-ifsc.git
+cd chat-bot-ifsc
+```
+
+### 2. Configure as variáveis de ambiente
+```bash
+# Copie o arquivo de exemplo
+cp .env.example .env
+
+# Edite com suas chaves
+nano .env
+```
+
+
+
+### 3. (Opcional) Adicione documentos
+```bash
+# Coloque PDFs na pasta para indexação automática
+cp seus_pdfs/* ./pdfs/
+```
+
+### 4. Execute com Docker
+```bash
+# Desenvolvimento
 docker-compose up --build
+
+# Produção
+docker-compose -f docker-compose.prod.yml up --build -d
 ```
 
-- O frontend estará disponível em [http://localhost:3000](http://localhost:3000)
-- O backend estará disponível em [http://localhost:8000](http://localhost:8000)
 
-## Tecnologias
+## 📖 Uso
 
-- **Frontend:** Next.js, React, TailwindCSS, TypeScript
-- **Backend:** FastAPI, LangChain, FAISS, OpenAI, Maritaca
-- **Autenticação:** JWT
-- **Infraestrutura:** Docker, Docker Compose
+### Interface Web
+1. Acesse: `http://localhost:3000`
+2. Faça login com credenciais admin
+3. Digite suas perguntas sobre o IFSC-USP
+4. O sistema buscará informações nos documentos indexados
 
-## Funcionalidades
+### Exemplo de Conversa
+```
+Usuário: "Quais são os cursos oferecidos no IFSC?"
+Bot: "Com base nos documentos do IFSC, os principais cursos oferecidos são..."
 
-- Login de usuário com autenticação JWT
-- Chat inteligente com respostas baseadas em documentos do IFSC
-- Upload e indexação de PDFs
-- Busca semântica e reranking de respostas
-- Interface moderna e responsiva
+Usuário: "Como faço para me inscrever?"
+Bot: "Para se inscrever nos cursos do IFSC, você deve..."
+```
 
-## Estrutura dos principais diretórios
+## 📡 API Endpoints
 
-- `frontend/`: Código do frontend (Next.js)
-- `backend/`: Código do backend (FastAPI)
-- `pdfs/`: PDFs para indexação
-- `vectorstore/`: Base vetorial FAISS
-- `cache/`: Cache de respostas
+### Autenticação
+```http
+POST /auth/login
+Content-Type: application/x-www-form-urlencoded
 
-## Variáveis de ambiente principais
+username=admin&password=sua_senha
+```
 
-Veja o arquivo `.env.example` para exemplos e instruções.
+### Chat
+```http
+POST /chat
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "message": "Sua pergunta aqui",
+  "conversation_id": "optional-session-id",
+  "history": [
+    {"role": "user", "content": "pergunta anterior"},
+    {"role": "assistant", "content": "resposta anterior"}
+  ]
+}
+```
+
+### Status
+```http
+GET /
+# Retorna: {"message": "Bem-vindo à API do IFSC Chat"}
+```
+
+## 📁 Estrutura do Projeto
+
+```
+chat-bot-ifsc/
+├── 🌐 frontend/              # Interface Next.js
+│   ├── app/                  # App Router (Next.js 14)
+│   ├── components/           # Componentes React
+│   ├── lib/                  # Utilitários e API client
+│   └── Dockerfile           # Container frontend
+├── 🔧 backend/              # API FastAPI
+│   ├── app/
+│   │   ├── auth/            # Autenticação JWT
+│   │   ├── core/            # Configurações e Redis
+│   │   ├── middleware/      # Error handlers
+│   │   ├── routes/          # Endpoints da API
+│   │   ├── schemas/         # Modelos Pydantic
+│   │   └── services/        # RAG System e chat
+│   ├── cache/               # Cache local
+│   ├── pdfs/                # Documentos fonte
+│   ├── vectorstore/         # Base FAISS
+│   └── Dockerfile          # Container backend
+├── 📄 pdfs/                 # PDFs para indexação
+├── 🗃️ vectorstore/          # Dados FAISS persistidos
+├── 💾 cache/                # Cache de respostas
+├── 🐳 docker-compose.yml    # Orquestração dev
+├── 🚀 docker-compose.prod.yml # Orquestração produção
+└── 📋 .env.example          # Variáveis de ambiente
+```
+
+### Principais Módulos
+
+#### Backend (`/backend/app/`)
+- **`routes/chat.py`** - Endpoint principal do chat
+- **`services/chat_system.py`** - RAG System com FAISS
+- **`auth/auth.py`** - Autenticação JWT
+- **`core/redis_client.py`** - Cliente Redis para sessões
+- **`middleware/error_handler.py`** - Tratamento de erros
+
+#### Frontend (`/frontend/`)
+- **`components/ChatInterface.tsx`** - Interface principal do chat
+- **`lib/api.ts`** - Cliente da API
+- **`app/login/page.tsx`** - Página de autenticação
