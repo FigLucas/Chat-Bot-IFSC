@@ -7,7 +7,6 @@ Sistema de chat inteligente com IA para responder dúvidas sobre o IFSC-USP, uti
 ## 📋 Índice
 
 - [✨ Características](#-características)
-- [🏗 Arquitetura](#-arquitetura)
 - [🛠 Tecnologias](#-tecnologias)
 - [📋 Pré-requisitos](#-pré-requisitos)
 - [🚀 Instalação e Configuração](#-instalação-e-configuração)
