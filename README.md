@@ -1,70 +1,77 @@
-```markdown
-// filepath: README.md
 # 🤖 Assistente Virtual IFSC-USP
 
-Sistema de chat inteligente com IA para responder dúvidas sobre o IFSC-USP, utilizando RAG (Retrieval-Augmented Generation) e integração com modelos OpenAI e Maritaca.
+Sistema de chat inteligente com IA para responder dúvidas sobre o IFSC-USP, utilizando **RAG (Retrieval-Augmented Generation)** e integração com modelos **OpenAI** e **Maritaca**.
+
+---
 
 ## 📋 Índice
 
-- [Características](#-características)
-- [Arquitetura](#-arquitetura)
-- [Tecnologias](#-tecnologias)
-- [Pré-requisitos](#-pré-requisitos)
-- [Instalação e Configuração](#-instalação-e-configuração)
-- [Deploy](#-deploy)
-- [Uso](#-uso)
-- [API Endpoints](#-api-endpoints)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Contribuição](#-contribuição)
+- [✨ Características](#-características)
+- [🏗 Arquitetura](#-arquitetura)
+- [🛠 Tecnologias](#-tecnologias)
+- [📋 Pré-requisitos](#-pré-requisitos)
+- [🚀 Instalação e Configuração](#-instalação-e-configuração)
+- [⚡ Deploy](#-deploy)
+- [💬 Uso](#-uso)
+- [📡 API Endpoints](#-api-endpoints)
+- [📁 Estrutura do Projeto](#-estrutura-do-projeto)
+- [🤝 Contribuição](#-contribuição)
+
+---
 
 ## ✨ Características
 
 - 🔐 **Autenticação JWT** com middleware de segurança
-- 🧠 **Chat inteligente** usando RAG com busca semântica
-- 📄 **Processamento de PDFs** com indexação automática no FAISS
-- 🔍 **Reranking de respostas** para melhor relevância
-- 💾 **Cache Redis** para histórico de conversas com TTL
+- 🧠 **Chat inteligente** usando RAG e busca semântica
+- 📄 **Processamento de PDFs** com indexação automática via FAISS
+- 🔍 **Reranking de respostas** para maior relevância
+- 💾 **Cache Redis** para histórico de conversas com TTL configurável
 - 🌐 **Interface moderna** responsiva com Next.js e TailwindCSS
-- 🐳 **Containerização** completa com Docker
-- 📊 **Logs estruturados** para monitoramento
+- 🐳 **Containerização completa** com Docker
+- 📊 **Logs estruturados** para monitoramento detalhado
 
+---
 
-## 🛠️ Tecnologias
+## 🛠 Tecnologias
 
 ### Frontend
-- **Next.js 14** - Framework React com App Router
-- **TypeScript** - Tipagem estática
-- **TailwindCSS** - Framework CSS utilitário
-- **React Hooks** - Gerenciamento de estado
-- **Fetch API** - Comunicação com backend
+- **Next.js 14** – Framework React moderno com App Router
+- **TypeScript** – Tipagem estática
+- **TailwindCSS** – Estilização rápida e responsiva
+- **React Hooks** – Gerenciamento de estado
+- **Fetch API** – Comunicação com backend
 
 ### Backend
-- **FastAPI** - Framework web async Python
-- **LangChain** - Framework para aplicações com LLM
-- **FAISS** - Vector database para busca semântica
-- **Redis** - Cache e sessões
-- **PyPDF2** - Processamento de PDFs
-- **JWT** - Autenticação stateless
-- **Uvicorn** - Servidor ASGI
+- **FastAPI** – Framework web assíncrono em Python
+- **LangChain** – Aplicações com LLM
+- **FAISS** – Base de vetores para busca semântica
+- **Redis** – Cache distribuído e armazenamento de sessões
+- **PyPDF2** – Processamento e leitura de PDFs
+- **JWT** – Autenticação stateless
+- **Uvicorn** – Servidor ASGI rápido e eficiente
 
-### IA e ML
-- **OpenAI GPT** - Modelo principal de linguagem
-- **Maritaca AI** - Modelo alternativo brasileiro
-- **OpenAI Embeddings** - Geração de vetores semânticos
-- **Sentence Transformers** - Reranking de documentos
+### IA & ML
+- **OpenAI GPT** – Modelo principal de linguagem
+- **Maritaca AI** – Modelo alternativo brasileiro
+- **OpenAI Embeddings** – Vetores semânticos para RAG
+- **Sentence Transformers** – Reranking de documentos
 
 ### Infraestrutura
-- **Docker & Docker Compose** - Containerização
-- **Redis** - Cache distribuído
+- **Docker & Docker Compose** – Containerização e orquestração
+- **Redis** – Cache de respostas e sessões
+
+---
 
 ## 📋 Pré-requisitos
 
-- **Docker** 20.10+ e **Docker Compose** 2.0+
-- **Node.js** 18+ (para desenvolvimento local)
-- **Python** 3.11+ (para desenvolvimento local)
+- **Docker 20.10+** e **Docker Compose 2.0+**
+- **Node.js 18+** (desenvolvimento local)
+- **Python 3.11+** (desenvolvimento local)
 - **Chaves de API**:
   - OpenAI API Key
   - Maritaca API Key (opcional)
+
+---
 
 ## 🚀 Instalação e Configuração
 
@@ -72,7 +79,7 @@ Sistema de chat inteligente com IA para responder dúvidas sobre o IFSC-USP, uti
 ```bash
 git clone https://github.com/SEU_USUARIO/chat-bot-ifsc.git
 cd chat-bot-ifsc
-```
+
 
 ### 2. Configure as variáveis de ambiente
 ```bash
